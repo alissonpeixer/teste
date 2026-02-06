@@ -55144,8 +55144,7 @@ var GpeSaudeService = class _GpeSaudeService {
   }
   getGpeSaudeRelatorioFechamentoPdfXlsSmartView(filtro, fileExtension) {
     const httpOptions2 = this.utilService.filtrosHttpOptions(filtro);
-    httpOptions2.responseType = "blob";
-    return this.httpClient.get(`${this.url}/relatorio/fechamento/${fileExtension}`, httpOptions2);
+    return this.httpClient.get(`${this.url}/relatorio/fechamento/${fileExtension}`, __spreadProps(__spreadValues({}, httpOptions2), { responseType: "blob" }));
   }
   getGpeSaudePlanoArefi(filtro) {
     const httpOptions2 = this.utilService.filtrosHttpOptions(filtro);
@@ -56784,10 +56783,13 @@ var SaudeRelatorioFechamentoMensalComponent = class _SaudeRelatorioFechamentoMen
           const a = document.createElement("a");
           a.href = url;
           a.download = fileName;
+          a.style.display = "none";
           document.body.appendChild(a);
           a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            a.remove();
+          }, 100);
         },
         error: (erro) => {
           this.utilService.showErrorResponse("Nao foi possivel gerar o arquivo", erro);
