@@ -56779,18 +56779,15 @@ var SaudeRelatorioFechamentoMensalComponent = class _SaudeRelatorioFechamentoMen
     if (this.formRelatorio.valid) {
       this.gpeSaudeService.getGpeSaudeRelatorioFechamentoPdfXlsSmartView(this.relatorioFiltro.dados, fileExtension).subscribe({
         next: (retorno) => {
-          const blob = new Blob([retorno], { type: fileType });
-          const url = window.URL.createObjectURL(blob);
+          const url = window.URL.createObjectURL(retorno);
           const a = document.createElement("a");
           a.href = url;
           a.download = fileName;
           a.style.display = "none";
           document.body.appendChild(a);
           a.click();
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-            a.remove();
-          }, 100);
+          window.URL.revokeObjectURL(url);
+          a.remove();
         },
         error: (erro) => {
           this.utilService.showErrorResponse("Nao foi possivel gerar o arquivo", erro);
