@@ -55145,6 +55145,10 @@ var GpeSaudeService = class _GpeSaudeService {
   getGpeSaudeRelatorioFechamentoPdfXlsSmartView(filtro, fileExtension) {
     const httpOptions2 = this.utilService.filtrosHttpOptions(filtro);
     httpOptions2.responseType = "blob";
+    httpOptions2.headers = new HttpHeaders({
+      "skip-interceptor": "true",
+      "X-PO-Screen-Lock": "true"
+    });
     return this.httpClient.get(`${this.url}/relatorio/fechamento/${fileExtension}`, httpOptions2);
   }
   getGpeSaudePlanoArefi(filtro) {
@@ -56773,12 +56777,13 @@ var SaudeRelatorioFechamentoMensalComponent = class _SaudeRelatorioFechamentoMen
     });
   }
   gerarRelatorio(cextension = "'pdf'|'xls'") {
-    const fileType = cextension === "pdf" ? "application/pdf" : "application/octet-stream";
+    const fileType = cextension === "pdf" ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     const fileExtension = cextension === "pdf" ? "pdf" : "xlsx";
     const fileName = "fechamento_mensal." + fileExtension;
     if (this.formRelatorio.valid) {
       this.gpeSaudeService.getGpeSaudeRelatorioFechamentoPdfXlsSmartView(this.relatorioFiltro.dados, fileExtension).subscribe({
         next: (retorno) => {
+          console.log(retorno);
           const url = window.URL.createObjectURL(retorno);
           const a = document.createElement("a");
           a.href = url;
